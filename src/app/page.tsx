@@ -13,6 +13,7 @@ type ImageProps = {
 
 export default function Home() {
   const [images, setImages] = useState<ImageProps[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const widths = [500, 1000, 1600];
   const ratios = [2.2, 4, 6, 8];
@@ -33,6 +34,7 @@ export default function Home() {
         };
       });
       setImages(src);
+      setLoading(false);
     };
 
     getImages();
@@ -40,23 +42,29 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-10">
-      <Gallery
-        widths={widths}
-        ratios={ratios}
-        images={images}
-        lastRowBehavior="fill"
-        overlay={(i) => {
-          return (
-            <Link
-              href={images[i].pexels_url}
-              target="_blank"
-              className="absolute top-0 left-0 w-full h-full flex justify-center items-center"
-            >
-              {/* <h1 className="text-white text-2xl">{i}</h1> */}
-            </Link>
-          );
-        }}
-      />
+      {loading ? (
+        <div>
+          <h1>fetching images from pexels.com/@maruarchive...</h1>
+        </div>
+      ) : (
+        <Gallery
+          widths={widths}
+          ratios={ratios}
+          images={images}
+          lastRowBehavior="fill"
+          overlay={(i) => {
+            return (
+              <Link
+                href={images[i].pexels_url}
+                target="_blank"
+                className="absolute top-0 left-0 w-full h-full flex justify-center items-center"
+              >
+                {/* <h1 className="text-white text-2xl">{i}</h1> */}
+              </Link>
+            );
+          }}
+        />
+      )}
     </div>
   );
 }
